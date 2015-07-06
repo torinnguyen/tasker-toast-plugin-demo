@@ -1,0 +1,2 @@
+include ':localeapi'
+include ':localetoast_setting_plugin'
