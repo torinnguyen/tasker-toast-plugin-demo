@@ -17,7 +17,7 @@
     <string name="app_name">Demo Toast</string>
 
     <!-- Name of the plug-in that appears in Locale -->
-    <string name="plugin_name">Broadlink</string>
+    <string name="plugin_name">Demo Toast</string>
 
     <!-- Hint text in the toast edit text -->
     <string name="message_hint">Scheduled Toast</string>

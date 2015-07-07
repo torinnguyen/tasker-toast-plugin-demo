@@ -19,12 +19,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.Locale;
-
 import com.yourcompany.yoursetting.Constants;
 import com.yourcompany.yoursetting.bundle.BundleScrubber;
 import com.yourcompany.yoursetting.bundle.PluginBundleManager;
 import com.yourcompany.yoursetting.ui.EditActivity;
+
+import java.util.Locale;
 
 /**
  * This is the "fire" BroadcastReceiver for a Locale Plug-in setting.
@@ -47,14 +47,10 @@ public final class FireReceiver extends BroadcastReceiver
         /*
          * Always be strict on input parameters! A malicious third-party app could send a malformed Intent.
          */
-
         if (!com.twofortyfouram.locale.Intent.ACTION_FIRE_SETTING.equals(intent.getAction()))
         {
             if (Constants.IS_LOGGABLE)
-            {
-                Log.e(Constants.LOG_TAG,
-                      String.format(Locale.US, "Received unexpected Intent action %s", intent.getAction())); //$NON-NLS-1$
-            }
+                Log.e(Constants.LOG_TAG, String.format(Locale.US, "Received unexpected Intent action %s", intent.getAction())); //$NON-NLS-1$
             return;
         }
 

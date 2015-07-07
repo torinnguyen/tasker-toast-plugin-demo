@@ -60,34 +60,39 @@ public final class EditActivity extends AbstractPluginActivity {
 
     @Override
     public void finish() {
-        if (!isCanceled()) {
-            final String message = ((EditText) findViewById(android.R.id.text1)).getText().toString();
-
-            if (message.length() > 0) {
-                final Intent resultIntent = new Intent();
-
-                /*
-                 * This extra is the data to ourselves: either for the Activity or the BroadcastReceiver. Note
-                 * that anything placed in this Bundle must be available to Locale's class loader. So storing
-                 * String, int, and other standard objects will work just fine. Parcelable objects are not
-                 * acceptable, unless they also implement Serializable. Serializable objects must be standard
-                 * Android platform objects (A Serializable class private to this plug-in's APK cannot be
-                 * stored in the Bundle, as Locale's classloader will not recognize it).
-                 */
-                final Bundle resultBundle =
-                        PluginBundleManager.generateBundle(getApplicationContext(), message);
-                resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, resultBundle);
-
-                /*
-                 * The blurb is concise status text to be displayed in the host's UI.
-                 */
-                final String blurb = generateBlurb(getApplicationContext(), message);
-                resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, blurb);
-
-                setResult(RESULT_OK, resultIntent);
-            }
+        //User cancelled
+        if (isCanceled()) {
+            super.finish();
+            return;
         }
 
+        //Sanity check
+        final String message = ((EditText) findViewById(android.R.id.text1)).getText().toString();
+        if (message.length() <= 0) {
+            super.finish();
+            return;
+        }
+
+        final Intent resultIntent = new Intent();
+
+        /*
+         * This extra is the data to ourselves: either for the Activity or the BroadcastReceiver. Note
+         * that anything placed in this Bundle must be available to Locale's class loader. So storing
+         * String, int, and other standard objects will work just fine. Parcelable objects are not
+         * acceptable, unless they also implement Serializable. Serializable objects must be standard
+         * Android platform objects (A Serializable class private to this plug-in's APK cannot be
+         * stored in the Bundle, as Locale's classloader will not recognize it).
+         */
+        final Bundle resultBundle = PluginBundleManager.generateBundle(getApplicationContext(), message);
+        resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, resultBundle);
+
+        /*
+         * The blurb is concise status text to be displayed in the host's UI (Tasker UI itself).
+         */
+        final String blurb = generateBlurb(getApplicationContext(), message);
+        resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, blurb);
+
+        setResult(RESULT_OK, resultIntent);
         super.finish();
     }
 
@@ -98,13 +103,12 @@ public final class EditActivity extends AbstractPluginActivity {
      */
     /* package */
     static String generateBlurb(final Context context, final String message) {
-        final int maxBlurbLength =
-                context.getResources().getInteger(R.integer.twofortyfouram_locale_maximum_blurb_length);
+        final int maxBlurbLength = context.getResources().getInteger(R.integer.twofortyfouram_locale_maximum_blurb_length);
 
-        if (message.length() > maxBlurbLength) {
-            return message.substring(0, maxBlurbLength);
-        }
+        String finalMessage = "Show toast: " + message;
+        if (finalMessage.length() > maxBlurbLength)
+            finalMessage = finalMessage.substring(0, maxBlurbLength);
 
-        return message;
+        return finalMessage;
     }
 }
